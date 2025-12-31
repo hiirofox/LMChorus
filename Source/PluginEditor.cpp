@@ -20,8 +20,8 @@ LModelAudioProcessorEditor::LModelAudioProcessorEditor(LModelAudioProcessor& p)
 	setOpaque(false);  // 允许在边框外面绘制
 
 	//setResizeLimits(64 * 11, 64 * 5, 10000, 10000); // 设置最小宽高为300x200，最大宽高为800x600
-	setSize(64 * 7, 64 * 5);
-	setResizeLimits(64 * 7, 64 * 5, 64 * 13, 64 * 8);
+	setSize(64 * 7, 64 * 2);
+	setResizeLimits(64 * 7, 64 * 2, 64 * 13, 64 * 2);
 
 	//constrainer.setFixedAspectRatio(11.0 / 4.0);  // 设置为16:9比例
 	//setConstrainer(&constrainer);  // 绑定窗口的宽高限制
@@ -41,7 +41,7 @@ LModelAudioProcessorEditor::LModelAudioProcessorEditor(LModelAudioProcessor& p)
 	K_Spread.setText("spread", "");
 	K_Spread.ParamLink(audioProcessor.GetParams(), "spread");
 	addAndMakeVisible(K_Spread);
-	K_Mix.setText("mix", "");
+	K_Mix.setText("wet", "");
 	K_Mix.ParamLink(audioProcessor.GetParams(), "mix");
 	addAndMakeVisible(K_Mix);
 

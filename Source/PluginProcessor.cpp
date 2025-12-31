@@ -30,11 +30,11 @@ LModelAudioProcessor::LModelAudioProcessor()
 juce::AudioProcessorValueTreeState::ParameterLayout LModelAudioProcessor::createParameterLayout()
 {
 	juce::AudioProcessorValueTreeState::ParameterLayout layout;
-	layout.add(std::make_unique<juce::AudioParameterFloat>("taps", "taps", 2, 8, 2));
-	layout.add(std::make_unique<juce::AudioParameterFloat>("delay", "delay", 0.0f, 1.0, 0));
-	layout.add(std::make_unique<juce::AudioParameterFloat>("depth", "depth", 0, 1, 0.25));
-	layout.add(std::make_unique<juce::AudioParameterFloat>("rate", "rate", 0, 1, 0.5));
-	layout.add(std::make_unique<juce::AudioParameterFloat>("spread", "spread", 0, 1, 1));
+	layout.add(std::make_unique<juce::AudioParameterFloat>("taps", "taps", 2, 6, 6));
+	layout.add(std::make_unique<juce::AudioParameterFloat>("delay", "delay", 0.0f, 1.0, 0.25));
+	layout.add(std::make_unique<juce::AudioParameterFloat>("depth", "depth", 0, 1, 0.3));
+	layout.add(std::make_unique<juce::AudioParameterFloat>("rate", "rate", 0, 1, 0.3));
+	layout.add(std::make_unique<juce::AudioParameterFloat>("spread", "spread", 0, 1, 0.5));
 	layout.add(std::make_unique<juce::AudioParameterFloat>("mix", "mix", 0.0f, 1.0, 1.0));
 
 	return layout;
@@ -99,7 +99,7 @@ void LModelAudioProcessor::setCurrentProgram(int index)
 
 const juce::String LModelAudioProcessor::getProgramName(int index)
 {
-	return "CmpxDlyTex";
+	return "LMChorus";
 }
 
 void LModelAudioProcessor::changeProgramName(int index, const juce::String& newName)
