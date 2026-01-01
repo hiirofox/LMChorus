@@ -17,19 +17,15 @@ private:
 
 	int pos = 0;
 
-	// 4点三阶 Hermite 插值：比线性插值显著减少高频混叠
-	// 
 	inline float ReadSampleHermite(float delay)
 	{
 		float readPos = (float)pos - delay;
-		// 确保 readPos 在 [0, MaxDelayLen) 之间
 		while (readPos < 0) readPos += MaxDelayLen;
 		while (readPos >= MaxDelayLen) readPos -= MaxDelayLen;
 
 		int i1 = (int)readPos;
 		float f = readPos - i1;
 
-		// 获取相邻的四个点进行计算
 		int i0 = (i1 - 1 + MaxDelayLen) % MaxDelayLen;
 		int i2 = (i1 + 1) % MaxDelayLen;
 		int i3 = (i1 + 2) % MaxDelayLen;
@@ -39,7 +35,6 @@ private:
 		float y2 = dat[i2];
 		float y3 = dat[i3];
 
-		// Hermite 插值公式，兼顾计算速度与质量
 		float c0 = y1;
 		float c1 = 0.5f * (y2 - y0);
 		float c2 = y0 - 2.5f * y1 + 2.0f * y2 - 0.5f * y3;
@@ -50,7 +45,6 @@ private:
 	inline float ReadSampleLinear(float delay)
 	{
 		float readPos = (float)pos - delay;
-		// 确保 readPos 在 [0, MaxDelayLen) 之间
 		while (readPos < 0) readPos += MaxDelayLen;
 		while (readPos >= MaxDelayLen) readPos -= MaxDelayLen;
 		int i1 = (int)readPos;
@@ -59,7 +53,6 @@ private:
 		return dat[i1] * (1.0f - f) + dat[i2] * f;
 	}
 public:
-	// 为了兼容你原本的 Chorus 逻辑，保留这个常数，但逻辑改为平滑步进
 	constexpr static int GradientSamples = 10000;
 
 	DelayLine()
@@ -67,7 +60,6 @@ public:
 		std::fill(dat, dat + MaxDelayLen, 0.0f);
 	}
 
-	// 设置目标延迟并计算步进值（在 GradientSamples 周期内完成过渡）
 	inline void SetDelayTime(float t)
 	{
 		targetDelay = t;
@@ -81,11 +73,8 @@ public:
 
 	inline void WriteSample(float val)
 	{
-		// 1. 写入当前采样
 		dat[pos] = val;
 
-		// 2. 更新平滑的延迟时间（代替之前的 crossfade 逻辑）
-		// 这样可以保证读取指针的运动更加平滑，减少多普勒产生的畸变
 		if (fabsf(targetDelay - currentDelay) > 0.0001f)
 		{
 			currentDelay += delayVelocity;
@@ -95,11 +84,8 @@ public:
 			currentDelay = targetDelay;
 		}
 
-		// 3. 使用高阶插值读取
-		//out = ReadSampleHermite(currentDelay);
-		out = ReadSampleLinear(currentDelay);
+		out = ReadSampleHermite(currentDelay);
 
-		// 4. 更新指针
 		if (++pos >= MaxDelayLen) pos = 0;
 	}
 };
